@@ -1,59 +1,109 @@
-// Ilustrações SVG limpas para demonstrar posição corporal e alinhamento
+// Ilustrações SVG específicas para cada tipo de movimento na calistenia
 const DIAGRAMS = {
-  push: `<svg viewBox="0 0 260 110" class="w-full max-w-xs h-28" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round">
-    <line x1="15" y1="95" x2="245" y2="95" class="text-slate-700"/>
-    <circle cx="195" cy="48" r="10" class="text-amber-400"/>
-    <line x1="185" y1="53" x2="90" y2="75" class="text-amber-300"/>
-    <line x1="90" y1="75" x2="35" y2="92" class="text-slate-300"/>
-    <line x1="175" y1="56" x2="175" y2="93" class="text-emerald-400"/>
-    <text x="130" y="20" text-anchor="middle" fill="#94a3b8" stroke="none" font-size="11">Corpo alinhado • Escápulas firmes • Core travado</text>
-  </svg>`,
-  planche: `<svg viewBox="0 0 260 110" class="w-full max-w-xs h-28" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round">
+  push: `<svg viewBox="0 0 260 115" class="w-full max-w-xs h-28" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round">
     <line x1="15" y1="98" x2="245" y2="98" class="text-slate-700"/>
-    <circle cx="195" cy="45" r="10" class="text-amber-400"/>
-    <line x1="184" y1="48" x2="55" y2="48" class="text-amber-300"/>
-    <path d="M155 48 L172 96" class="text-emerald-400"/>
-    <text x="130" y="20" text-anchor="middle" fill="#94a3b8" stroke="none" font-size="11">Protração escapular + Inclinação frontal dos ombros</text>
+    <circle cx="192" cy="54" r="9" class="text-amber-400"/>
+    <line x1="183" y1="58" x2="92" y2="76" class="text-amber-300"/>
+    <line x1="92" y1="76" x2="36" y2="94" class="text-slate-300"/>
+    <line x1="172" y1="61" x2="172" y2="96" class="text-emerald-400"/>
+    <text x="130" y="18" text-anchor="middle" fill="#94a3b8" stroke="none" font-size="10">Cotovelos ~45° • Tronco pranchado • Peito ao solo</text>
   </svg>`,
-  pull: `<svg viewBox="0 0 260 110" class="w-full max-w-xs h-28" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round">
-    <line x1="40" y1="18" x2="220" y2="18" class="text-slate-500" stroke-width="4"/>
-    <line x1="115" y1="18" x2="122" y2="45" class="text-emerald-400"/>
-    <line x1="145" y1="18" x2="138" y2="45" class="text-emerald-400"/>
-    <circle cx="130" cy="34" r="9" class="text-amber-400"/>
-    <line x1="130" y1="45" x2="130" y2="82" class="text-amber-300"/>
-    <line x1="130" y1="82" x2="124" y2="104" class="text-slate-300"/>
-    <text x="130" y="106" text-anchor="middle" fill="#94a3b8" stroke="none" font-size="10">Depressão escapular • Peito em direção à barra</text>
+
+  planche: `<svg viewBox="0 0 260 115" class="w-full max-w-xs h-28" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round">
+    <line x1="15" y1="100" x2="245" y2="100" class="text-slate-700"/>
+    <circle cx="204" cy="46" r="9" class="text-amber-400"/>
+    <line x1="195" y1="49" x2="55" y2="49" class="text-amber-300"/>
+    <line x1="168" y1="49" x2="178" y2="98" class="text-emerald-400"/>
+    <path d="M178 49 L178 16" class="text-sky-400" stroke-dasharray="3 3"/>
+    <text x="130" y="18" text-anchor="middle" fill="#94a3b8" stroke="none" font-size="10">Ombros à frente das mãos • Braços travados • Corpo horizontal</text>
   </svg>`,
-  frontLever: `<svg viewBox="0 0 260 110" class="w-full max-w-xs h-28" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round">
+
+  pull: `<svg viewBox="0 0 260 115" class="w-full max-w-xs h-28" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round">
     <line x1="40" y1="16" x2="220" y2="16" class="text-slate-500" stroke-width="4"/>
-    <line x1="155" y1="16" x2="175" y2="58" class="text-emerald-400"/>
-    <circle cx="195" cy="58" r="9" class="text-amber-400"/>
-    <line x1="185" y1="58" x2="55" y2="58" class="text-amber-300"/>
-    <text x="130" y="96" text-anchor="middle" fill="#94a3b8" stroke="none" font-size="11">Braços estendidos • Corpo paralelo ao solo</text>
+    <line x1="112" y1="16" x2="122" y2="42" class="text-emerald-400"/>
+    <line x1="148" y1="16" x2="138" y2="42" class="text-emerald-400"/>
+    <circle cx="130" cy="30" r="8" class="text-amber-400"/>
+    <line x1="130" y1="39" x2="130" y2="78" class="text-amber-300"/>
+    <line x1="130" y1="78" x2="125" y2="102" class="text-slate-300"/>
+    <text x="130" y="112" text-anchor="middle" fill="#94a3b8" stroke="none" font-size="10">Escápulas para baixo • Peito subindo até a barra</text>
   </svg>`,
-  flag: `<svg viewBox="0 0 260 110" class="w-full max-w-xs h-28" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round">
-    <line x1="65" y1="10" x2="65" y2="104" class="text-slate-500" stroke-width="5"/>
-    <line x1="65" y1="35" x2="105" y2="48" class="text-emerald-400"/>
-    <line x1="65" y1="75" x2="105" y2="56" class="text-sky-400"/>
-    <circle cx="105" cy="36" r="8" class="text-amber-400"/>
-    <line x1="105" y1="48" x2="225" y2="48" class="text-amber-300"/>
-    <text x="155" y="96" text-anchor="middle" fill="#94a3b8" stroke="none" font-size="11">Braço de cima puxa • Braço de baixo empurra</text>
+
+  frontLever: `<svg viewBox="0 0 260 115" class="w-full max-w-xs h-28" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round">
+    <line x1="40" y1="14" x2="220" y2="14" class="text-slate-500" stroke-width="4"/>
+    <line x1="155" y1="14" x2="176" y2="56" class="text-emerald-400"/>
+    <circle cx="196" cy="56" r="8" class="text-amber-400"/>
+    <line x1="187" y1="56" x2="52" y2="56" class="text-amber-300"/>
+    <text x="130" y="96" text-anchor="middle" fill="#94a3b8" stroke="none" font-size="10">Costas paralelas ao chão • Braços retos • Quadril alto</text>
   </svg>`,
-  handstand: `<svg viewBox="0 0 260 110" class="w-full max-w-xs h-28" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round">
+
+  flag: `<svg viewBox="0 0 260 115" class="w-full max-w-xs h-28" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round">
+    <line x1="62" y1="10" x2="62" y2="105" class="text-slate-500" stroke-width="5"/>
+    <line x1="62" y1="34" x2="106" y2="48" class="text-emerald-400"/>
+    <line x1="62" y1="76" x2="106" y2="56" class="text-sky-400"/>
+    <circle cx="106" cy="35" r="8" class="text-amber-400"/>
+    <line x1="106" y1="48" x2="228" y2="48" class="text-amber-300"/>
+    <text x="155" y="96" text-anchor="middle" fill="#94a3b8" stroke="none" font-size="10">Mão superior puxa • Mão inferior empurra • Alinhamento lateral</text>
+  </svg>`,
+
+  sidePlank: `<svg viewBox="0 0 260 115" class="w-full max-w-xs h-28" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round">
+    <line x1="20" y1="98" x2="240" y2="98" class="text-slate-700"/>
+    <line x1="95" y1="66" x2="95" y2="97" class="text-emerald-400"/>
+    <circle cx="185" cy="36" r="8" class="text-amber-400"/>
+    <line x1="177" y1="40" x2="52" y2="96" class="text-amber-300"/>
+    <line x1="95" y1="66" x2="95" y2="30" class="text-sky-400"/>
+    <text x="130" y="18" text-anchor="middle" fill="#94a3b8" stroke="none" font-size="10">Apoio lateral • Quadril elevado • Sem girar o tronco</text>
+  </svg>`,
+
+  muscleUp: `<svg viewBox="0 0 260 115" class="w-full max-w-xs h-28" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round">
+    <line x1="40" y1="46" x2="220" y2="46" class="text-slate-500" stroke-width="4"/>
+    <path d="M130 88 Q155 55 130 22" class="text-sky-400" stroke-dasharray="3 3"/>
+    <circle cx="130" cy="24" r="8" class="text-amber-400"/>
+    <line x1="130" y1="33" x2="130" y2="68" class="text-amber-300"/>
+    <line x1="115" y1="46" x2="122" y2="38" class="text-emerald-400"/>
+    <line x1="145" y1="46" x2="138" y2="38" class="text-emerald-400"/>
+    <text x="130" y="108" text-anchor="middle" fill="#94a3b8" stroke="none" font-size="10">Puxada explosiva • Transição à frente • Trava no alto</text>
+  </svg>`,
+
+  dip: `<svg viewBox="0 0 260 115" class="w-full max-w-xs h-28" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round">
+    <line x1="75" y1="54" x2="185" y2="54" class="text-slate-500" stroke-width="4"/>
+    <line x1="115" y1="54" x2="124" y2="72" class="text-emerald-400"/>
+    <circle cx="142" cy="52" r="8" class="text-amber-400"/>
+    <line x1="136" y1="58" x2="112" y2="88" class="text-amber-300"/>
+    <text x="130" y="108" text-anchor="middle" fill="#94a3b8" stroke="none" font-size="10">Tronco levemente inclinado • Ombro abaixo do cotovelo</text>
+  </svg>`,
+
+  handstand: `<svg viewBox="0 0 260 115" class="w-full max-w-xs h-28" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round">
     <line x1="30" y1="100" x2="230" y2="100" class="text-slate-700"/>
     <line x1="130" y1="100" x2="130" y2="66" class="text-emerald-400"/>
     <circle cx="130" cy="76" r="8" class="text-amber-400"/>
-    <line x1="130" y1="66" x2="130" y2="14" class="text-amber-300"/>
-    <text x="130" y="10" text-anchor="middle" fill="#94a3b8" stroke="none" font-size="10">Empurre o chão • Retroversão pélvica</text>
+    <line x1="130" y1="66" x2="130" y2="16" class="text-amber-300"/>
+    <text x="130" y="112" text-anchor="middle" fill="#94a3b8" stroke="none" font-size="10">Empurre o solo • Olhar entre as mãos • Quadril alinhado</text>
   </svg>`,
-  squat: `<svg viewBox="0 0 260 110" class="w-full max-w-xs h-28" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round">
+
+  pike: `<svg viewBox="0 0 260 115" class="w-full max-w-xs h-28" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round">
+    <line x1="20" y1="98" x2="240" y2="98" class="text-slate-700"/>
+    <line x1="115" y1="36" x2="55" y2="96" class="text-amber-300"/>
+    <line x1="115" y1="36" x2="175" y2="96" class="text-amber-300"/>
+    <circle cx="168" cy="74" r="8" class="text-amber-400"/>
+    <text x="130" y="18" text-anchor="middle" fill="#94a3b8" stroke="none" font-size="10">Quadril alto em "V" • Cabeça à frente das mãos</text>
+  </svg>`,
+
+  squat: `<svg viewBox="0 0 260 115" class="w-full max-w-xs h-28" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round">
     <line x1="25" y1="98" x2="235" y2="98" class="text-slate-700"/>
-    <circle cx="125" cy="28" r="9" class="text-amber-400"/>
-    <line x1="125" y1="38" x2="115" y2="68" class="text-amber-300"/>
-    <line x1="115" y1="68" x2="145" y2="72" class="text-emerald-400"/>
-    <line x1="145" y1="72" x2="135" y2="97" class="text-slate-300"/>
-    <line x1="115" y1="68" x2="195" y2="68" class="text-sky-400"/>
-    <text x="130" y="14" text-anchor="middle" fill="#94a3b8" stroke="none" font-size="11">Calcanhar firme • Joelho alinhado com o pé</text>
+    <circle cx="122" cy="30" r="8" class="text-amber-400"/>
+    <line x1="122" y1="39" x2="112" y2="68" class="text-amber-300"/>
+    <line x1="112" y1="68" x2="144" y2="72" class="text-emerald-400"/>
+    <line x1="144" y1="72" x2="134" y2="97" class="text-slate-300"/>
+    <line x1="112" y1="68" x2="195" y2="68" class="text-sky-400"/>
+    <text x="130" y="16" text-anchor="middle" fill="#94a3b8" stroke="none" font-size="10">Calcanhar firme • Joelho no eixo do pé • Coluna neutra</text>
+  </svg>`,
+
+  hollow: `<svg viewBox="0 0 260 115" class="w-full max-w-xs h-28" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round">
+    <line x1="15" y1="96" x2="245" y2="96" class="text-slate-700"/>
+    <path d="M55 68 Q130 92 205 64" class="text-amber-300"/>
+    <circle cx="62" cy="54" r="8" class="text-amber-400"/>
+    <line x1="70" y1="58" x2="42" y2="48" class="text-emerald-400"/>
+    <text x="130" y="20" text-anchor="middle" fill="#94a3b8" stroke="none" font-size="10">Lombar colada no chão • Ombros e pernas elevados</text>
   </svg>`
 };
 
@@ -173,7 +223,7 @@ const PROGRESSION_PATHS = [
         name: 'Inverted Hang & Skin the Cat',
         target: '4x 5 reps',
         equip: 'Barra Fixa ou Argolas',
-        diagram: 'frontLever',
+        diagram: 'hollow',
         steps: [
           'Suba as pernas passando por baixo da barra até ficar invertido.',
           'Controle a descida lentamente usando as dorsais.'
@@ -246,7 +296,7 @@ const PROGRESSION_PATHS = [
         name: 'Prancha Lateral Isométrica',
         target: '3x 40s cada lado',
         equip: 'Sem equipamento',
-        diagram: 'push',
+        diagram: 'sidePlank',
         steps: [
           'Apoie o antebraço no chão e eleve o quadril formando uma linha reta.',
           'Sustente sem deixar a pelve girar.'
@@ -345,7 +395,7 @@ const PROGRESSION_PATHS = [
         name: 'Barra Fixa Estrita + Mergulho na Barra Reta',
         target: '4x 8 barras + 4x 10 dips',
         equip: 'Barra Fixa',
-        diagram: 'pull',
+        diagram: 'dip',
         steps: [
           'Domine barras fixas limpas passando o queixo e mergulhos profundos acima da barra.',
           'Controle toda a amplitude sem balanço excessivo.'
@@ -371,7 +421,7 @@ const PROGRESSION_PATHS = [
         name: 'Negativas de Transição (Slow Negative MU)',
         target: '4x 3 reps (5s de descida)',
         equip: 'Barra Fixa Baixa',
-        diagram: 'pull',
+        diagram: 'muscleUp',
         steps: [
           'Comece no topo da barra, desça o mergulho e gire os punhos para trás controladamente.',
           'Segure a transição o máximo possível.'
@@ -384,7 +434,7 @@ const PROGRESSION_PATHS = [
         name: 'Muscle-up com Elástico ou Leve Balanço',
         target: '4x 3 reps',
         equip: 'Barra Fixa',
-        diagram: 'pull',
+        diagram: 'muscleUp',
         steps: [
           'Inicie a puxada explosiva, incline o tronco sobre a barra e empurre o mergulho.',
           'Mantenha os cotovelos fechados na transição.'
@@ -397,7 +447,7 @@ const PROGRESSION_PATHS = [
         name: 'Strict Bar Muscle-up',
         target: '3x 3 reps estritas',
         equip: 'Barra Fixa',
-        diagram: 'pull',
+        diagram: 'muscleUp',
         steps: [
           'Saia da suspensão morta sem impulso das pernas e suba acima da barra em movimento contínuo.',
           'Finalize com cotovelos totalmente travados no topo.'
@@ -418,7 +468,7 @@ const PROGRESSION_PATHS = [
         name: 'Pike Push-up no Chão',
         target: '4x 10 reps',
         equip: 'Sem equipamento',
-        diagram: 'push',
+        diagram: 'pike',
         steps: [
           'Forme um "V" invertido com o quadril alto.',
           'Leve o topo da cabeça à frente das mãos formando um triângulo e empurre de volta.'
@@ -431,7 +481,7 @@ const PROGRESSION_PATHS = [
         name: 'Pike Push-up com Pés Elevados',
         target: '4x 8 reps',
         equip: 'Banco / Degrau',
-        diagram: 'push',
+        diagram: 'pike',
         steps: [
           'Apoie os pés em um banco deixando o tronco quase vertical.',
           'Controle a descida e empurre até travar os ombros.'
@@ -604,7 +654,7 @@ const DAILY_EXERCISES = [
     prescription: '6 reps cada lado',
     restSeconds: 30,
     equipment: ['none'],
-    diagram: 'squat',
+    diagram: 'sidePlank',
     steps: [
       'Dê um passo largo à frente, apoie a mão oposta no chão e gire o tronco abrindo o braço para o teto.',
       'Respire fundo a cada rotação.'
@@ -662,7 +712,7 @@ const DAILY_EXERCISES = [
     prescription: '4x 8–12 reps',
     restSeconds: 60,
     equipment: ['none'],
-    diagram: 'push',
+    diagram: 'pike',
     steps: [
       'Eleve o quadril em V invertido e leve a cabeça à frente da linha das mãos.',
       'Empurre com os ombros até travar os cotovelos.'
@@ -676,7 +726,7 @@ const DAILY_EXERCISES = [
     prescription: '4x 8–12 reps',
     restSeconds: 75,
     equipment: ['paralelas'],
-    diagram: 'push',
+    diagram: 'dip',
     steps: [
       'Desça até o ombro ficar abaixo da linha do cotovelo com tronco levemente inclinado.',
       'Empurre até estender os braços.'
@@ -690,7 +740,7 @@ const DAILY_EXERCISES = [
     prescription: '4x 8–10 reps',
     restSeconds: 75,
     equipment: ['argolas'],
-    diagram: 'push',
+    diagram: 'dip',
     steps: [
       'Execute a flexão mantendo as argolas estáveis junto ao corpo.',
       'No topo, gire as palmas levemente para fora (RTO).'
@@ -720,7 +770,7 @@ const DAILY_EXERCISES = [
     prescription: '4x 12 reps lentas',
     restSeconds: 60,
     equipment: ['none'],
-    diagram: 'push',
+    diagram: 'hollow',
     steps: [
       'Deitado de bruços (Superman Pull), estenda os braços à frente e puxe os cotovelos para trás apertando as escápulas.',
       'Segure 2 segundos na contração máxima.'
@@ -864,7 +914,7 @@ const DAILY_EXERCISES = [
     prescription: '4x 25–35s',
     restSeconds: 45,
     equipment: ['none'],
-    diagram: 'push',
+    diagram: 'hollow',
     steps: [
       'Deitado de costas, pressione a lombar 100% contra o chão.',
       'Eleve ombros e pernas estendidas mantendo a tensão abdominal.'
@@ -878,7 +928,7 @@ const DAILY_EXERCISES = [
     prescription: '3x 25s cada lado',
     restSeconds: 45,
     equipment: ['elastico'],
-    diagram: 'flag',
+    diagram: 'sidePlank',
     steps: [
       'Fique de lado para a ancoragem do elástico, estenda os braços à frente do peito e resista à rotação.',
       'Mantenha quadril e ombros perfeitamente alinhados.'
