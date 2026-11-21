@@ -1,48 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
-  const STORAGE_KEY = 'calistenia_forge_state_v1';
-  const AI_KEY_STORAGE = 'calistenia_forge_gemini_key_v1';
-
-  function loadState() {
-    try {
-      const raw = JSON.parse(localStorage.getItem(STORAGE_KEY));
-      return {
-        masteredIds: Array.isArray(raw?.masteredIds) ? raw.masteredIds : [],
-        personalRecords: raw?.personalRecords && typeof raw.personalRecords === 'object' ? raw.personalRecords : {},
-        completedWorkouts: Number(raw?.completedWorkouts) || 0,
-        lastExerciseIds: Array.isArray(raw?.lastExerciseIds) ? raw.lastExerciseIds : [],
-        mode: raw?.mode === 'equip' ? 'equip' : 'none',
-        selectedEquip: Array.isArray(raw?.selectedEquip) ? raw.selectedEquip : ['barra', 'paralelas']
-      };
-    } catch {
-      return {
-        masteredIds: [],
-        personalRecords: {},
-        completedWorkouts: 0,
-        lastExerciseIds: [],
-        mode: 'none',
-        selectedEquip: ['barra', 'paralelas']
-      };
-    }
-  }
-
-  let state = loadState();
-  let currentWorkout = [];
-  let selectedSkillFilter = 'all';
-
-  function saveState() {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-    updateHeaderBadges();
-  }
-
-  function formatPrLabel(pr) {
-    if (!pr || !pr.value) return null;
-    const unitText = pr.unit === 's' ? `${pr.value}s` : `${pr.value} rep${Number(pr.value) === 1 ? '' : 's'}`;
-    return `PR: ${unitText}`;
-  }
-
-  function inferDefaultUnit(targetText = '') {
-    return /\b\d+\s*s\b|seg/i.test(targetText) ? 's' : 'reps';
-  }
+  const STORAGE_KEY = 'calistenia_jw_state_v1';
+  const AI_KEY_STORAGE = 'calistenia_jw_gemini_key_v1';
 
   // Elementos principais
   const streakBadge = document.getElementById('streak-badge');
@@ -104,12 +62,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
   let activeTab = 'workout';
 
-  function updateHeaderBadges() {
-    const totalSkills = PROGRESSION_PATHS.reduce((acc, path) => acc + path.steps.length, 0);
-    streakBadge.textContent = `🔥 ${state.completedWorkouts} treino${state.completedWorkouts === 1 ? '' : 's'}`;
-    masteredBadge.textContent = `🏆 ${state.masteredIds.length}/${totalSkills} dominados`;
-  }
-
   function switchTab(tabName) {
     activeTab = tabName;
     tabBtns.forEach(btn => {
@@ -127,6 +79,75 @@ document.addEventListener('DOMContentLoaded', () => {
   tabBtns.forEach(btn => {
     btn.addEventListener('click', () => switchTab(btn.getAttribute('data-tab')));
   });
+
+  // Diagnóstico caso data.js não tenha sido carregado ou tenha erro de sintaxe
+  if (
+    typeof PROGRESSION_PATHS === 'undefined' ||
+    !Array.isArray(PROGRESSION_PATHS) ||
+    typeof DAILY_EXERCISES === 'undefined' ||
+    !Array.isArray(DAILY_EXERCISES) ||
+    DAILY_EXERCISES.length === 0
+  ) {
+    if (dailyWorkoutContainer) {
+      dailyWorkoutContainer.innerHTML = `
+        <div class="bg-slate-900 border border-rose-500/50 rounded-2xl p-5 space-y-2 text-sm text-rose-200">
+          <p class="font-bold">Não foi possível carregar os dados do treino (data.js).</p>
+          <p class="text-xs text-slate-300">
+            Verifique se o arquivo <strong>data.js</strong> está na mesma pasta do <strong>index.html</strong>, sem cortes ou erro de sintaxe, e recarregue a página.
+          </p>
+        </div>
+      `;
+    }
+    return;
+  }
+
+  function loadState() {
+    try {
+      const raw = JSON.parse(localStorage.getItem(STORAGE_KEY));
+      return {
+        masteredIds: Array.isArray(raw?.masteredIds) ? raw.masteredIds : [],
+        personalRecords: raw?.personalRecords && typeof raw.personalRecords === 'object' ? raw.personalRecords : {},
+        completedWorkouts: Number(raw?.completedWorkouts) || 0,
+        lastExerciseIds: Array.isArray(raw?.lastExerciseIds) ? raw.lastExerciseIds : [],
+        mode: raw?.mode === 'equip' ? 'equip' : 'none',
+        selectedEquip: Array.isArray(raw?.selectedEquip) ? raw.selectedEquip : ['barra', 'paralelas']
+      };
+    } catch {
+      return {
+        masteredIds: [],
+        personalRecords: {},
+        completedWorkouts: 0,
+        lastExerciseIds: [],
+        mode: 'none',
+        selectedEquip: ['barra', 'paralelas']
+      };
+    }
+  }
+
+  let state = loadState();
+  let currentWorkout = [];
+  let selectedSkillFilter = 'all';
+
+  function saveState() {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    updateHeaderBadges();
+  }
+
+  function formatPrLabel(pr) {
+    if (!pr || !pr.value) return null;
+    const unitText = pr.unit === 's' ? `${pr.value}s` : `${pr.value} rep${Number(pr.value) === 1 ? '' : 's'}`;
+    return `PR: ${unitText}`;
+  }
+
+  function inferDefaultUnit(targetText = '') {
+    return /\b\d+\s*s\b|seg/i.test(targetText) ? 's' : 'reps';
+  }
+
+  function updateHeaderBadges() {
+    const totalSkills = PROGRESSION_PATHS.reduce((acc, path) => acc + path.steps.length, 0);
+    streakBadge.textContent = `🔥 ${state.completedWorkouts} treino${state.completedWorkouts === 1 ? '' : 's'}`;
+    masteredBadge.textContent = `🏆 ${state.masteredIds.length}/${totalSkills} dominados`;
+  }
 
   // --- MODO DE EQUIPAMENTO & TREINO DIÁRIO ---
   function syncModeUI() {
@@ -198,6 +219,15 @@ document.addEventListener('DOMContentLoaded', () => {
       month: 'long'
     });
     workoutDateLabel.textContent = `${today} • ${state.mode === 'none' ? 'Peso do corpo livre' : 'Com equipamentos selecionados'}`;
+
+    if (currentWorkout.length === 0) {
+      dailyWorkoutContainer.innerHTML = `
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 text-sm text-slate-300">
+          Nenhum exercício encontrado para o filtro atual. Clique em <strong>Gerar Novo Treino</strong>.
+        </div>
+      `;
+      return;
+    }
 
     dailyWorkoutContainer.innerHTML = currentWorkout
       .map((ex, idx) => `
@@ -569,7 +599,8 @@ document.addEventListener('DOMContentLoaded', () => {
   }) {
     modalBadge.textContent = badge;
     modalTitle.textContent = title;
-    modalDiagram.innerHTML = DIAGRAMS[diagramKey] || DIAGRAMS.push;
+    const fallbackDiagram = typeof DIAGRAMS !== 'undefined' ? DIAGRAMS.push : '';
+    modalDiagram.innerHTML = (typeof DIAGRAMS !== 'undefined' && DIAGRAMS[diagramKey]) || fallbackDiagram;
     modalSteps.innerHTML = steps.map(s => `<li>${s}</li>`).join('');
     modalMistake.textContent = mistake;
     modalTarget.textContent = target;
