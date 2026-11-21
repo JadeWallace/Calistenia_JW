@@ -1,9 +1,12 @@
+# Arquivos temporários e de editores
 .DS_Store
 Thumbs.db
 .vscode/
 .idea/
 *.swp
 *.log
+
+# Dependências e builds locais (caso evolua o projeto depois)
 node_modules/
 dist/
 build/
