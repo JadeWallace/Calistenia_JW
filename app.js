@@ -1,5 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
   const STORAGE_KEY = 'calistenia_forge_state_v1';
+  const AI_KEY_STORAGE = 'calistenia_forge_gemini_key_v1';
 
   function loadState() {
     try {
@@ -76,6 +77,10 @@ document.addEventListener('DOMContentLoaded', () => {
   const modalPrValue = document.getElementById('modal-pr-value');
   const modalPrUnit = document.getElementById('modal-pr-unit');
   const modalSavePrBtn = document.getElementById('modal-save-pr-btn');
+  const modalAiKeyBtn = document.getElementById('modal-ai-key-btn');
+  const modalAiQuestion = document.getElementById('modal-ai-question');
+  const modalAiAskBtn = document.getElementById('modal-ai-ask-btn');
+  const modalAiResponse = document.getElementById('modal-ai-response');
   const modalTimerBtn = document.getElementById('modal-timer-btn');
   const modalMasterBtn = document.getElementById('modal-master-btn');
 
@@ -474,7 +479,75 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  // --- MODAL DE DEMONSTRAÇÃO E RECORDE PESSOAL ---
+  // --- MODAL DE DEMONSTRAÇÃO, PR E COACHING IA ---
+  function getStoredAiKey() {
+    return localStorage.getItem(AI_KEY_STORAGE) || '';
+  }
+
+  function configureAiKey() {
+    const currentKey = getStoredAiKey();
+    const typed = window.prompt(
+      'Cole sua chave da Gemini API (ela ficará salva apenas neste navegador, no localStorage):',
+      currentKey
+    );
+    if (typed !== null) {
+      const cleaned = typed.trim();
+      if (cleaned) {
+        localStorage.setItem(AI_KEY_STORAGE, cleaned);
+      } else {
+        localStorage.removeItem(AI_KEY_STORAGE);
+      }
+    }
+  }
+
+  async function askAiAboutExercise(exerciseTitle, mistakeText, stepsList) {
+    let apiKey = getStoredAiKey();
+    if (!apiKey) {
+      configureAiKey();
+      apiKey = getStoredAiKey();
+      if (!apiKey) return;
+    }
+
+    const userQuestion = modalAiQuestion.value.trim() ||
+      'Me dê 3 dicas práticas de postura, ativação muscular e regressão segura para esse movimento.';
+
+    modalAiResponse.classList.remove('is-hidden');
+    modalAiResponse.textContent = 'Analisando biomecânica e montando orientação...';
+    modalAiAskBtn.disabled = true;
+
+    const promptText = [
+      'Você é um treinador especialista em calistenia e progressões avançadas.',
+      `Movimento: ${exerciseTitle}`,
+      `Passo a passo base: ${stepsList.join(' | ')}`,
+      `Erro comum: ${mistakeText}`,
+      `Dúvida do atleta: ${userQuestion}`,
+      'Responda em português de forma clara, objetiva e segura, com tópicos curtos.'
+    ].join('\n');
+
+    try {
+      const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${encodeURIComponent(apiKey)}`;
+      const res = await fetch(endpoint, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          contents: [{ parts: [{ text: promptText }] }]
+        })
+      });
+
+      const data = await res.json();
+      if (!res.ok) {
+        throw new Error(data?.error?.message || 'Falha na requisição à IA.');
+      }
+
+      const answer = data?.candidates?.[0]?.content?.parts?.[0]?.text?.trim();
+      modalAiResponse.textContent = answer || 'Não foi possível gerar uma resposta agora.';
+    } catch (err) {
+      modalAiResponse.textContent = `Não foi possível consultar a IA: ${err.message}`;
+    } finally {
+      modalAiAskBtn.disabled = false;
+    }
+  }
+
   function refreshModalPr(stepId, targetText) {
     const existingPr = state.personalRecords[stepId];
     modalPrCurrent.textContent = existingPr ? `Atual: ${formatPrLabel(existingPr)}` : 'Sem PR registrado';
@@ -501,6 +574,12 @@ document.addEventListener('DOMContentLoaded', () => {
     modalMistake.textContent = mistake;
     modalTarget.textContent = target;
     modalEquip.textContent = equip;
+
+    modalAiQuestion.value = '';
+    modalAiResponse.textContent = '';
+    modalAiResponse.classList.add('is-hidden');
+    modalAiKeyBtn.onclick = configureAiKey;
+    modalAiAskBtn.onclick = () => askAiAboutExercise(title, mistake, steps);
 
     modalTimerBtn.onclick = () => {
       closeExerciseModal();
